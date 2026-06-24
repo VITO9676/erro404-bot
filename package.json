@@ -1,0 +1,14 @@
+{
+  "name": "erro404-trading-bot",
+  "version": "1.0.0",
+  "description": "Trading bot for Vertex Binary",
+  "main": "server-logic.js",
+  "scripts": {
+    "start": "node server-logic.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "playwright": "^1.40.0",
+    "dotenv": "^16.3.1"
+  }
+}
