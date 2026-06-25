@@ -1,34 +1,29 @@
 const express = require('express');
-const { chromium } = require('playwright');
+const path = require('path');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 app.use(express.json());
+app.use(express.static('public'));
 
-let isRunning = false;
+let botSettings = { isActive: false, amount: 5000, asset: 'BTC/USD' };
 
 app.get('/', (req, res) => {
-  res.send('ERRO404 Bot is active and standing by.');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/start', async (req, res) => {
-  if (isRunning) return res.status(400).json({ status: 'Already running' });
-  
-  isRunning = true;
-  console.log('Starting ERRO404 Signal Hunt...');
-  
-  // Aqui entra a lógica do market-engine.js que monitora o BTC/USD
-  // e executa as ordens de R$ 5.000,00 na Vertex Binary.
-  
-  res.json({ status: 'ERRO404 Started' });
+app.get('/api/settings', (req, res) => {
+    res.json(botSettings);
 });
 
-app.post('/stop', (req, res) => {
-  isRunning = false;
-  console.log('ERRO404 Stopped');
-  res.json({ status: 'ERRO404 Stopped' });
+app.post('/api/settings', (req, res) => {
+    const { isActive, amount } = req.body;
+    if (typeof isActive !== 'undefined') botSettings.isActive = isActive;
+    if (typeof amount !== 'undefined') botSettings.amount = Number(amount);
+    console.log(`[ERRO404] Status: ${botSettings.isActive ? 'ATIVADO' : 'DESATIVADO'} | Valor: R$ ${botSettings.amount}`);
+    res.json({ success: true, settings: botSettings });
 });
 
 app.listen(port, () => {
-  console.log(`ERRO404 Server running on port ${port}`);
+    console.log(`🚀 ERRO404 Dashboard rodando na porta ${port}`);
 });
